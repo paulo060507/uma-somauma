@@ -1,29 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UMA - Assistente da Somauma</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UMA - Assistente da Somauma</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>UMA - Assistente da Somauma</h1>
-  <div id="chat"></div>
-  <input type="text" id="pergunta" placeholder="Digite sua pergunta..." />
-  <button onclick="enviar()">Enviar</button>
-  <script>
-    async function enviar() {
-      const pergunta = document.getElementById('pergunta').value;
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: pergunta })
-      });
-      const data = await res.json();
-      const chat = document.getElementById('chat');
-      chat.innerHTML += `<p><strong>Você:</strong> ${pergunta}</p>`;
-      chat.innerHTML += `<p><strong>UMA:</strong> ${data.resposta}</p>`;
-      document.getElementById('pergunta').value = '';
-    }
-  </script>
+    <div class="container">
+        <h1>UMA - Assistente da Somauma</h1>
+        <div id="chat-box">
+            <div class="message user">Você: oi</div>
+            <div class="message uma">UMA: Olá! Bem-vindo(a) à Somauma. Como posso te ajudar hoje?</div>
+        </div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Digite sua pergunta..." autocomplete="off" />
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
