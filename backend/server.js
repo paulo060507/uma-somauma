@@ -22,19 +22,33 @@ function contemProibida(msg) {
 app.post('/api/chat', async (req, res) => {
     const msg = req.body.message;
 
-    if (!msg) return res.json({ message: "Por favor, digite algo." });
+    if (!msg) return res.json({ message: "Por favor, digite algo para que eu possa te ajudar." });
 
     if (contemProibida(msg)) {
-        return res.json({ message: "Desculpe, não posso responder a esse tipo de pergunta." });
+        return res.json({ message: "Peço desculpas, mas não posso responder esse tipo de conteúdo. Estou aqui para ajudar com informações sobre a Somauma!" });
     }
 
-    const systemPrompt = `Você é UMA, a IA da Somauma, empresa de empreendimentos imobiliários no Brasil. Sempre que receber cumprimentos (oi, olá, bom dia), diga: "Olá! Eu sou a UMA, assistente virtual da Somauma. Como posso te ajudar?". Caso perguntem sobre a Somauma, explique que ela atua com imóveis e inovação. Para contatos ou interesse em compra, diga: "Entre em contato via e-mail contato@somauma.com.br ou pelo telefone +55 (11) 99999-9999". Não fale sobre religião, futebol, política, sexo ou qualquer tema ofensivo.`;
+    const prompt = `
+Você é UMA, a assistente virtual da Somauma. 
+Sua missão é responder com educação, simpatia e clareza, como uma atendente experiente que conhece bem a empresa. 
+Sempre que alguém disser "oi", "olá", "bom dia", etc., responda: 
+"Olá! Eu sou a UMA, assistente virtual da Somauma. Como posso te ajudar hoje?"
+
+Se alguém perguntar sobre:
+- "quem é a Somauma", diga que é uma empresa brasileira com atuação em projetos imobiliários inovadores e sustentáveis.
+- "empreendimentos", fale que há projetos em andamento em várias regiões do Brasil e que, para saber mais, basta entrar em contato.
+- "como comprar" ou "quero comprar", oriente: "Entre em contato via e-mail contato@somauma.com.br ou telefone +55 (11) 99999-9999".
+- Nunca responda sobre religião, política, futebol, sexualidade ou ofensas. 
+Se não entender algo, diga que está aqui para responder somente dúvidas relacionadas à Somauma.
+
+Seja natural, como se estivesse conversando com um visitante interessado no site da Somauma.
+`;
 
     try {
         const resposta = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: modelo,
             messages: [
-                { role: 'system', content: systemPrompt },
+                { role: 'system', content: prompt },
                 { role: 'user', content: msg }
             ],
             temperature: 0.7
@@ -48,9 +62,8 @@ app.post('/api/chat', async (req, res) => {
         return res.json({ message: resposta.data.choices[0].message.content });
     } catch (err) {
         console.error(err.response?.data || err.message);
-        return res.json({ message: "Houve um erro ao acessar minha inteligência. Tente novamente em breve." });
+        return res.json({ message: "Houve um erro ao tentar responder. Por favor, tente novamente em instantes." });
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor online na porta ${PORT}`));
+app.listen(3000, () => console.log("Servidor UMA online na porta 3000"));
