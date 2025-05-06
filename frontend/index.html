@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>UMA - IA da Somauma</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 40px; }
+        #chatbox { width: 100%; max-width: 600px; margin: auto; }
+        #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; background: white; }
+        #userInput { width: 100%; padding: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <h2>UMA - Assistente da Somauma</h2>
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Digite sua pergunta sobre a Somauma..." />
+    </div>
+
+    <script>
+        const input = document.getElementById('userInput');
+        const messages = document.getElementById('messages');
+
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const userText = input.value;
+                messages.innerHTML += `<p><strong>Você:</strong> ${userText}</p>`;
+                input.value = '';
+
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userText })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    messages.innerHTML += `<p><strong>UMA:</strong> ${data.reply}</p>`;
+                    messages.scrollTop = messages.scrollHeight;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
