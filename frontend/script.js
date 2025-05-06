@@ -1,19 +1,19 @@
-document.getElementById('form').addEventListener('submit', async function(e) {
+
+document.getElementById('chat-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const input = document.getElementById('input');
-    const userText = input.value;
-    input.value = '';
+    const userInput = document.getElementById('user-input').value.trim();
+    if (!userInput) return;
 
-    const conversation = document.getElementById('conversation');
-    conversation.innerHTML += '<p><strong>Você:</strong> ' + userText + '</p>';
+    const chatBox = document.getElementById('chat-box');
+    chatBox.innerHTML += `<p><strong>Você:</strong> ${userInput}</p>`;
+    document.getElementById('user-input').value = '';
 
-    const response = await fetch('/ask', {
+    const res = await fetch('/api', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: userText })
+        body: JSON.stringify({ message: userInput })
     });
-
-    const data = await response.json();
-    conversation.innerHTML += '<p><strong>UMA:</strong> ' + data.answer + '</p>';
-    conversation.scrollTop = conversation.scrollHeight;
+    const data = await res.json();
+    chatBox.innerHTML += `<p><strong>UMA:</strong> ${data.response}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
 });
