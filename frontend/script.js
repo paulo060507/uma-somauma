@@ -1,32 +1,20 @@
-const chatForm = document.getElementById("chat-form");
-const chatBox = document.getElementById("chat-box");
-const userInput = document.getElementById("user-input");
+async function sendMessage() {
+    const userInput = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+    const message = userInput.value;
 
-async function getResponse(question) {
-    const res = await fetch("dados.json");
-    const data = await res.json();
+    if (!message.trim()) return;
 
-    const lowerQ = question.toLowerCase();
-    if (lowerQ.includes("quem criou") || lowerQ.includes("fundador"))
-        return data.criador;
-    if (lowerQ.includes("equipe"))
-        return data.equipe;
-    if (lowerQ.includes("empreendimento"))
-        return data.empreendimentos;
-    if (lowerQ.includes("como chegar") || lowerQ.includes("localização"))
-        return data.localizacao;
-    if (lowerQ.includes("valores"))
-        return data.valores;
-    return data.default;
-}
+    chatBox.innerHTML += `<p><strong>Você:</strong> ${message}</p>`;
+    userInput.value = '';
 
-chatForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const question = userInput.value.trim();
-    if (!question) return;
-    chatBox.innerHTML += `<div class="message user">Você: ${question}</div>`;
-    userInput.value = "";
-    const resposta = await getResponse(question);
-    chatBox.innerHTML += `<div class="message uma">UMA: ${resposta}</div>`;
+    const response = await fetch('http://localhost:10000/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: message })
+    });
+
+    const data = await response.json();
+    chatBox.innerHTML += `<p><strong>UMA:</strong> ${data.answer}</p>`;
     chatBox.scrollTop = chatBox.scrollHeight;
-});
+}
