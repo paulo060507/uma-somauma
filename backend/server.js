@@ -1,58 +1,46 @@
-
 const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
+const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
-
 const app = express();
-app.use(bodyParser.json());
+const PORT = process.env.PORT || 10000;
+
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.json());
 
-const forbiddenWords = ["sexo", "religião", "futebol", "preto", "macaco", "viado", "sapatão", "negrão",
-                        "merda", "caralho", "porra", "buceta", "puta", "babaca", "imbecil", "otário"];
+app.post('/ask', (req, res) => {
+    const question = req.body.question.toLowerCase();
+    const dados = JSON.parse(fs.readFileSync(path.join(__dirname, '../frontend/dados_somauma.json'), 'utf8'));
+    let resposta = "Desculpe, ainda estou aprendendo sobre isso.";
 
-const greetings = ["oi", "olá", "bom dia", "boa tarde", "boa noite"];
-
-const baseConhecimento = {
-    "quem é a somauma": "A Somauma é uma empresa dedicada ao desenvolvimento de empreendimentos inovadores e sustentáveis.",
-    "me fale sobre os empreendimentos": "Atualmente, a Somauma possui empreendimentos em desenvolvimento nas regiões mais promissoras de São Paulo.",
-    "como faço contato": "Você pode entrar em contato pelo e-mail: contato@somauma.com.br ou telefone: +55 (11) 99999-9999."
-};
-
-app.post('/api', async (req, res) => {
-    const question = req.body.message.toLowerCase();
-
-    if (forbiddenWords.some(w => question.includes(w))) {
-        return res.json({ response: "Desculpe, não posso responder a esse tipo de pergunta." });
+    if (question.includes("quem criou") || question.includes("fundador")) {
+        resposta = dados.empresa.descricao;
+    } else if (question.includes("empreendimento") || question.includes("projeto")) {
+        resposta = dados.empreendimentos.map(function(e) {
+            return `🏢 ${e.nome}: ${e.descricao}`;
+        }).join("\n\n");
+    } else if (question.includes("equipe") || question.includes("quem trabalha")) {
+        resposta = dados.equipe.map(function(p) {
+            return `${p.nome} - ${p.cargo}: ${p.descricao}`;
+        }).join("\n\n");
+    } else if (question.includes("missão")) {
+        resposta = dados.empresa.missao;
+    } else if (question.includes("visão")) {
+        resposta = dados.empresa.visao;
+    } else if (question.includes("valores")) {
+        resposta = dados.empresa.valores.join(", ");
+    } else if (
+        question.includes("contato") || question.includes("email") || question.includes("telefone") ||
+        question.includes("comprar") || question.includes("adquirir") || question.includes("interesse") ||
+        question.includes("investir") || question.includes("alugar") || question.includes("preço") || question.includes("valor")
+    ) {
+        resposta = `Fico feliz com seu interesse! Para conhecer mais detalhes ou adquirir um empreendimento da Somauma, entre em contato pelo e-mail: ${dados.empresa.contato.email} ou telefone: ${dados.empresa.contato.telefone}`;
+    } else if (question.includes("local") || question.includes("como chegar")) {
+        resposta = `A Somauma está localizada em: ${dados.empresa.localizacao}`;
     }
 
-    if (greetings.some(g => question.includes(g))) {
-        return res.json({ response: "Olá! Eu sou a UMA, a assistente da Somauma. Em que posso ajudar?" });
-    }
-
-    const resposta = Object.entries(baseConhecimento).find(([chave]) => question.includes(chave));
-    if (resposta) {
-        return res.json({ response: resposta[1] });
-    }
-
-    try {
-        const openaiRes = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: question }]
-        }, {
-            headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const reply = openaiRes.data.choices[0].message.content;
-        return res.json({ response: reply });
-    } catch (err) {
-        return res.json({ response: "Desculpe, houve um problema ao acessar minha inteligência externa." });
-    }
+    res.json({ answer: resposta });
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
