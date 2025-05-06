@@ -1,50 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>UMA - IA da Somauma</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f6f4ef; margin: 0; padding: 0; }
-        .header { background-color: #3c5133; color: #fff; padding: 20px; text-align: center; font-size: 1.5em; }
-        .chatbox { width: 80%; max-width: 700px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; }
-        .messages { height: 300px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #ccc; padding: 10px; }
-        .input-area { display: flex; }
-        input[type="text"] { flex: 1; padding: 10px; font-size: 1em; }
-        button { padding: 10px 20px; background: #3c5133; color: #fff; border: none; cursor: pointer; }
-        button:hover { background: #2f4027; }
-        .user { font-weight: bold; }
-        .uma { color: #7b4f2c; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UMA - Assistente da Somauma</title>
 </head>
 <body>
-    <div class="header">UMA - Assistente da Somauma</div>
-    <div class="chatbox">
-        <div class="messages" id="messages"></div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Digite sua pergunta sobre a Somauma...">
-            <button onclick="sendMessage()">Enviar</button>
-        </div>
-    </div>
-    <script>
-        async function sendMessage() {
-            const input = document.getElementById('userInput');
-            const message = input.value.trim();
-            if (!message) return;
-
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML += `<div><span class='user'>Você:</span> ${message}</div>`;
-            input.value = "";
-
-            const response = await fetch('/api', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ message })
-            });
-
-            const data = await response.json();
-            messagesDiv.innerHTML += `<div><span class='uma'>UMA:</span> ${data.reply || "Erro na resposta."}</div>`;
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-    </script>
+  <h1>UMA - Assistente da Somauma</h1>
+  <div id="chat"></div>
+  <input type="text" id="pergunta" placeholder="Digite sua pergunta..." />
+  <button onclick="enviar()">Enviar</button>
+  <script>
+    async function enviar() {
+      const pergunta = document.getElementById('pergunta').value;
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: pergunta })
+      });
+      const data = await res.json();
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<p><strong>Você:</strong> ${pergunta}</p>`;
+      chat.innerHTML += `<p><strong>UMA:</strong> ${data.resposta}</p>`;
+      document.getElementById('pergunta').value = '';
+    }
+  </script>
 </body>
 </html>
