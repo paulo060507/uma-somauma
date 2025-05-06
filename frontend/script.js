@@ -1,19 +1,20 @@
-
 document.getElementById('chat-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const userInput = document.getElementById('user-input').value.trim();
-    if (!userInput) return;
+    const input = document.getElementById('user-input');
+    const msg = input.value.trim();
+    if (!msg) return;
 
-    const chatBox = document.getElementById('chat-box');
-    chatBox.innerHTML += `<p><strong>Você:</strong> ${userInput}</p>`;
-    document.getElementById('user-input').value = '';
+    const box = document.getElementById('chat-box');
+    box.innerHTML += `<p><strong>Você:</strong> ${msg}</p>`;
+    input.value = '';
 
-    const res = await fetch('/api', {
+    const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userInput })
+        body: JSON.stringify({ message: msg })
     });
+
     const data = await res.json();
-    chatBox.innerHTML += `<p><strong>UMA:</strong> ${data.response}</p>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
+    box.innerHTML += `<p><strong>UMA:</strong> ${data.message}</p>`;
+    box.scrollTop = box.scrollHeight;
 });
