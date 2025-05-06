@@ -10,7 +10,7 @@ app.use(express.static('frontend'));
 app.post('/chat', async (req, res) => {
     const userMessage = req.body.message;
 
-    const somaumaPrompt = `Responda apenas se a pergunta for sobre a Somauma, seus integrantes, seus projetos ou os bairros, prédios e eventos onde atuam. Caso contrário, diga: 'Desculpe, só posso responder sobre a Somauma.'\n\nUsuário: ${userMessage}\nIA:`;
+    const somaumaPrompt = `Responda apenas se a pergunta for sobre a Somauma, seus integrantes, seus projetos ou os bairros, prédios e eventos onde atuam. Caso contrário, diga: "Desculpe, só posso responder sobre a Somauma."\n\nUsuário: ${userMessage}\nIA:`;
 
     try {
         const response = await fetch('https://api.openai.com/v1/completions', {
@@ -28,9 +28,15 @@ app.post('/chat', async (req, res) => {
         });
 
         const data = await response.json();
-        res.json({ reply: data.choices[0].text.trim() });
+
+        const resposta = data.choices && data.choices[0]?.text?.trim();
+        if (resposta) {
+            res.json({ reply: resposta });
+        } else {
+            res.json({ reply: 'Erro: resposta vazia da OpenAI. Verifique a chave ou modelo.' });
+        }
     } catch (err) {
-        res.status(500).json({ error: 'Erro ao acessar a OpenAI API' });
+        res.status(500).json({ reply: 'Erro ao acessar a OpenAI API. Verifique o servidor ou sua conexão.' });
     }
 });
 

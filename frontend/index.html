@@ -4,19 +4,61 @@
     <meta charset="UTF-8">
     <title>UMA - IA da Somauma</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 40px; }
-        #chatbox { width: 100%; max-width: 600px; margin: auto; }
-        #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; background: white; }
-        #userInput { width: 100%; padding: 10px; margin-top: 10px; }
+        body {
+            background-color: #f5f2ed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: #4c5b3c;
+            color: white;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        #chat-container {
+            background: #fff;
+            width: 90%;
+            max-width: 800px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        #messages {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        #userInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .user, .uma {
+            margin: 5px 0;
+        }
+        .user { color: #4c5b3c; }
+        .uma { color: #955e42; }
     </style>
 </head>
 <body>
-    <div id="chatbox">
-        <h2>UMA - Assistente da Somauma</h2>
+    <header>UMA - Assistente da Somauma</header>
+    <div id="chat-container">
         <div id="messages"></div>
-        <input type="text" id="userInput" placeholder="Digite sua pergunta sobre a Somauma..." />
+        <input type="text" id="userInput" placeholder="Digite sua pergunta sobre a Somauma...">
     </div>
-
     <script>
         const input = document.getElementById('userInput');
         const messages = document.getElementById('messages');
@@ -24,7 +66,7 @@
         input.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 const userText = input.value;
-                messages.innerHTML += `<p><strong>Você:</strong> ${userText}</p>`;
+                messages.innerHTML += `<p class='user'><strong>Você:</strong> ${userText}</p>`;
                 input.value = '';
 
                 fetch('/chat', {
@@ -34,7 +76,7 @@
                 })
                 .then(res => res.json())
                 .then(data => {
-                    messages.innerHTML += `<p><strong>UMA:</strong> ${data.reply}</p>`;
+                    messages.innerHTML += `<p class='uma'><strong>UMA:</strong> ${data.reply}</p>`;
                     messages.scrollTop = messages.scrollHeight;
                 });
             }
