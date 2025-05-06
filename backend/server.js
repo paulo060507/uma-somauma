@@ -1,30 +1,27 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
+const axios = require('axios');
 const app = express();
-const PORT = 10000;
+const port = process.env.PORT || 10000;
 
-app.use(cors());
-app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.json());
 
 app.post('/ask', (req, res) => {
     const question = req.body.question.toLowerCase();
-    const data = JSON.parse(fs.readFileSync(__dirname + '/../frontend/dados.json', 'utf8'));
+    const dados = JSON.parse(fs.readFileSync(path.join(__dirname, '../frontend/dados.json'), 'utf8'));
+    let resposta = "Desculpe, não encontrei informações sobre isso na base da Somauma.";
 
-    let answer = "Desculpe, não tenho uma resposta para isso.";
+    if (question.includes("quem criou")) resposta = dados.somauma.criador;
+    else if (question.includes("empreendimentos")) resposta = dados.somauma.empreendimentos;
+    else if (question.includes("equipe")) resposta = dados.somauma.equipe;
+    else if (question.includes("valores")) resposta = dados.somauma.valores;
+    else if (question.includes("somauma")) resposta = dados.somauma.sobre;
 
-    if (question.includes("equipe")) {
-        answer = data.equipe;
-    } else if (question.includes("quem criou") || question.includes("fundador")) {
-        answer = data.quem_criou;
-    } else if (question.includes("empreendimento") || question.includes("projeto")) {
-        answer = data.empreendimentos;
-    }
-
-    res.json({ answer });
+    res.json({ answer: resposta });
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
 });

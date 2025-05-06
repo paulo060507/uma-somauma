@@ -1,5 +1,9 @@
 {
-    "equipe": "A equipe da Somauma é formada por profissionais experientes e apaixonados por inovação urbana.",
-    "quem_criou": "A Somauma foi criada por um grupo de investidores e empreendedores comprometidos com a transformação urbana.",
-    "empreendimentos": "Os empreendimentos da Somauma incluem projetos imobiliários inovadores em diversas regiões do Brasil."
+    "somauma": {
+        "sobre": "A Somauma é formada por investidores e empreendedores com experiência no mercado imobiliário...",
+        "criador": "O grupo fundador da Somauma é composto por investidores e empreendedores experientes.",
+        "empreendimentos": "Atualmente, a Somauma possui empreendimentos em desenvolvimento em diversas regiões do Brasil.",
+        "equipe": "A equipe da Somauma é composta por profissionais experientes e apaixonados pelo que fazem.",
+        "valores": "Inovação, sustentabilidade, excelência, transparência e compromisso com o cliente."
+    }
 }
