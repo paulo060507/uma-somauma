@@ -1,0 +1,47 @@
+{
+  "empresa": {
+    "nome": "Somauma",
+    "descricao": "A Somauma foi fundada por um grupo de investidores e empreendedores com experiência no mercado imobiliário. A equipe trabalha com dedicação e inovação para desenvolver projetos de alto padrão que valorizem o entorno urbano e promovam sustentabilidade.",
+    "missao": "Transformar espaços urbanos em ambientes humanos, sustentáveis e inspiradores.",
+    "visao": "Ser referência em empreendimentos inovadores e socialmente responsáveis no Brasil.",
+    "valores": [
+      "Sustentabilidade",
+      "Inovação",
+      "Transparência",
+      "Comprometimento",
+      "Valorização do entorno"
+    ],
+    "contato": {
+      "email": "contato@somauma.com.br",
+      "telefone": "+55 (11) 99999-9999",
+      "site": "https://somauma.com.br"
+    },
+    "localizacao": "Centro Histórico de São Paulo, SP"
+  },
+  "empreendimentos": [
+    {
+      "nome": "Residencial Somauma Centro",
+      "descricao": "Empreendimento residencial no coração do centro de São Paulo, focado em retrofit de edifícios históricos com padrão sustentável.",
+      "endereco": "Rua da Glória, 345 - Centro, São Paulo - SP",
+      "status": "Em andamento"
+    },
+    {
+      "nome": "Hub Criativo Somauma",
+      "descricao": "Espaço colaborativo e cultural voltado para empreendedores criativos, com coworking, estúdios e lojas integradas.",
+      "endereco": "Avenida Ipiranga, 200 - República, São Paulo - SP",
+      "status": "Concluído"
+    }
+  ],
+  "equipe": [
+    {
+      "nome": "Fernanda Lima",
+      "cargo": "Diretora Executiva",
+      "descricao": "Lidera a gestão estratégica da Somauma, com foco em inovação e impacto social nos projetos urbanos."
+    },
+    {
+      "nome": "Pedro Carvalho",
+      "cargo": "Arquiteto-Chefe",
+      "descricao": "Responsável pelos projetos arquitetônicos e pela integração dos valores históricos com soluções sustentáveis."
+    }
+  ]
+}
