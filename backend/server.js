@@ -10,37 +10,45 @@ app.use(express.static('frontend'));
 app.post('/chat', async (req, res) => {
     const userMessage = req.body.message;
 
-    const somaumaPrompt = `Responda apenas se a pergunta for sobre a Somauma, seus integrantes, seus projetos ou os bairros, prédios e eventos onde atuam. Caso contrário, diga: "Desculpe, só posso responder sobre a Somauma."\n\nUsuário: ${userMessage}\nIA:`;
+    const messages = [
+        {
+            role: "system",
+            content: "Você é UMA, a assistente dedicada exclusivamente à Somauma. Responda apenas perguntas relacionadas à Somauma, seus projetos, integrantes, imóveis e regiões de atuação. Se a pergunta não for sobre isso, diga educadamente que só pode responder sobre a Somauma."
+        },
+        {
+            role: "user",
+            content: userMessage
+        }
+    ];
 
     try {
-        const response = await fetch('https://api.openai.com/v1/completions', {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'text-davinci-003',
-                prompt: somaumaPrompt,
-                max_tokens: 150,
+                model: 'gpt-3.5-turbo',
+                messages: messages,
                 temperature: 0.7
             })
         });
 
         const data = await response.json();
 
-        const resposta = data.choices && data.choices[0]?.text?.trim();
+        const resposta = data.choices && data.choices[0]?.message?.content?.trim();
         if (resposta) {
             res.json({ reply: resposta });
         } else {
-            res.json({ reply: 'Erro: resposta vazia da OpenAI. Verifique a chave ou modelo.' });
+            res.json({ reply: 'Erro: resposta vazia. Verifique o modelo, a chave ou os créditos disponíveis.' });
         }
     } catch (err) {
-        res.status(500).json({ reply: 'Erro ao acessar a OpenAI API. Verifique o servidor ou sua conexão.' });
+        res.status(500).json({ reply: 'Erro ao acessar a API da OpenAI. Verifique sua conexão ou chave.' });
     }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
