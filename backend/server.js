@@ -1,50 +1,30 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
 require('dotenv').config();
-
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
 const app = express();
-app.use(bodyParser.json());
-app.use(express.static('frontend'));
+app.use(cors());
+app.use(express.json());
 
-app.post('/chat', async (req, res) => {
-    const userMessage = req.body.message;
-
-    const messages = [
-        {
-            role: "system",
-            content: "Você é UMA, a assistente dedicada exclusivamente à Somauma. Responda apenas perguntas relacionadas à Somauma, seus projetos, integrantes, imóveis e regiões de atuação. Se a pergunta não for sobre isso, diga educadamente que só pode responder sobre a Somauma."
-        },
-        {
-            role: "user",
-            content: userMessage
-        }
-    ];
-
+app.post('/ask', async (req, res) => {
+    const question = req.body.question;
+    const apiKey = process.env.OPENAI_API_KEY;
     try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
+        const response = await axios.post("https://api.openai.com/v1/chat/completions", {
+            model: "gpt-3.5-turbo",
+            messages: [
+                { role: "system", content: "Você é UMA, uma IA que só responde sobre a Somauma, seus empreendimentos, equipe, história, valores, formas de chegar e informações do entorno dos prédios. Fale de forma humana, gentil e útil." },
+                { role: "user", content: question }
+            ]
+        }, {
             headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: messages,
-                temperature: 0.7
-            })
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            }
         });
-
-        const data = await response.json();
-
-        const resposta = data.choices && data.choices[0]?.message?.content?.trim();
-        if (resposta) {
-            res.json({ reply: resposta });
-        } else {
-            res.json({ reply: 'Erro: resposta vazia. Verifique o modelo, a chave ou os créditos disponíveis.' });
-        }
-    } catch (err) {
-        res.status(500).json({ reply: 'Erro ao acessar a API da OpenAI. Verifique sua conexão ou chave.' });
+        res.json({ answer: response.data.choices[0].message.content });
+    } catch (error) {
+        res.json({ answer: "Erro: resposta vazia da OpenAI. Verifique a chave ou modelo." });
     }
 });
 
