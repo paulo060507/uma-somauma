@@ -1,9 +1,25 @@
 {
-    "somauma": {
-        "sobre": "A Somauma é formada por investidores e empreendedores com experiência no mercado imobiliário...",
-        "criador": "O grupo fundador da Somauma é composto por investidores e empreendedores experientes.",
-        "empreendimentos": "Atualmente, a Somauma possui empreendimentos em desenvolvimento em diversas regiões do Brasil.",
-        "equipe": "A equipe da Somauma é composta por profissionais experientes e apaixonados pelo que fazem.",
-        "valores": "Inovação, sustentabilidade, excelência, transparência e compromisso com o cliente."
+    "historia": "A Somauma é uma incorporadora e desenvolvedora fundada em 2020 com foco em retrofit e regeneração urbana.",
+    "missao": "Regenerar espaços urbanos com respeito à história e compromisso ambiental, promovendo habitação digna e plural.",
+    "equipe": "A equipe da Somauma é formada por profissionais apaixonados por arquitetura, urbanismo e sustentabilidade, unindo experiência e inovação para transformar espaços urbanos.",
+    "empreendimentos": {
+        "Edifício Virgínia": {
+            "descricao": "Retrofit de edifício modernista de 1951 no centro de SP. Terá unidades residenciais, lojas, academia e um bosque na cobertura.",
+            "localizacao": "Centro de São Paulo"
+        },
+        "RBS 700": {
+            "descricao": "Transformação de edifício comercial em unidades residenciais com foco em carbono neutro e economia de água.",
+            "localizacao": "Centro de São Paulo"
+        }
+    },
+    "contato": {
+        "email": "contato@somauma.com.br",
+        "telefone": "+55 (11) 99999-9999",
+        "instagram": "https://instagram.com/somauma.br",
+        "site": "https://www.somauma.com.br"
+    },
+    "enderecos": {
+        "Casa Somauma": "Av. São Luís, 84 - Centro, São Paulo - SP",
+        "Escritorio": "Rua Pedro Américo, 32, 19º andar - República, São Paulo - SP"
     }
 }
